@@ -1,6 +1,6 @@
 TARGET ?= main
 
-ST_UC ?= STM32F303xE
+ST_UC ?= STM32F401xE
 M_ARCH ?= cortex-m4
 M_FPU ?= fpv4-sp-d16
 M_FLOAT ?= soft
@@ -86,4 +86,10 @@ $(BUILD_DIR):
 
 clean: 
 	rm -rf build
+
+debug:
+	st-util
+
+flash:
+	st-flash write $(BUILD_DIR)/$(TARGET).bin 0x8000000
 
