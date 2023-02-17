@@ -11,7 +11,8 @@ LINKER_SCRIPT ?= $(wildcard $(SRC_DIR)/*.ld)
 BUILD_DIR ?= build
 
 SRC_DIR = src
-INC_DIR = include
+INC_DIR = -Iinclude
+INC_DIR += -Iinclude/core
 
 CC = $(TOOLCHAIN)gcc
 DB = $(TOOLCHAIN)gdb
@@ -24,7 +25,7 @@ BIN = $(OC) -O binary -S
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
 ASM_FILES = $(wildcard $(SRC_DIR)/*.s) $(wildcard $(SRC_DIR)/*/*.s)
 LD_SCRIPT = $(LINKER_SCRIPT)
-INCLUDES   = -I$(INC_DIR)
+INCLUDES   = $(INC_DIR)
 
 DEFS =  \
 -D$(ST_UC)
@@ -45,8 +46,8 @@ CFLAGS += $(DEBUG_FLAGS)
 CFLAGS += $(DEFS) $(INCLUDES) -Wall -fcommon -fdata-sections -ffunction-sections 
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LD_SCRIPT) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref,--gc-sections
-
+LDFLAGS = $(MCU) --specs=rdimon.specs -T$(LD_SCRIPT) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref,--gc-sections
+# -specs=nano.specs
 C_OBJ = $(patsubst %.c,$(BUILD_DIR)/%.o,$(notdir $(SRC_FILES)))
 ASM_OBJ = $(patsubst %.s,$(BUILD_DIR)/%.o,$(notdir $(ASM_FILES)))
 OBJ = $(C_OBJ) $(ASM_OBJ)
