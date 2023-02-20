@@ -46,8 +46,8 @@ CFLAGS += $(DEBUG_FLAGS)
 CFLAGS += $(DEFS) $(INCLUDES) -Wall -fcommon -fdata-sections -ffunction-sections 
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-LDFLAGS = $(MCU) --specs=rdimon.specs -T$(LD_SCRIPT) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref,--gc-sections
-# -specs=nano.specs
+LDFLAGS = $(MCU) --specs=nosys.specs -T$(LD_SCRIPT) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref,--gc-sections
+# -specs=nano.specs rdimon.specs
 C_OBJ = $(patsubst %.c,$(BUILD_DIR)/%.o,$(notdir $(SRC_FILES)))
 ASM_OBJ = $(patsubst %.s,$(BUILD_DIR)/%.o,$(notdir $(ASM_FILES)))
 OBJ = $(C_OBJ) $(ASM_OBJ)
