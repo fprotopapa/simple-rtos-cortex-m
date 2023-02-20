@@ -47,3 +47,22 @@
 #define USART2_SR_TXE (1UL << 7)
 #define USART2_DR_BASE (USART2_BASE + 0x4UL)
 #define USART2_DR (*((volatile uint32_t *)USART2_DR_BASE))
+
+#define SYST_CSR_EN (1UL << 0)
+#define SYST_CSR_TICKINT (1UL << 1)
+#define SYST_CSR_CLKSRC (1UL << 2)
+#define SYST_CSR_CNTFLAG (1UL << 16)
+#define SYST_CSR (*((volatile uint32_t *)0xE000E010))
+#define SYST_RVR (*((volatile uint32_t *)0xE000E014))
+#define SYST_CVR (*((volatile uint32_t *)0xE000E018))
+#define TIMEOUT_1_SEC 16000000
+
+__attribute__((always_inline)) static inline void __enable_irq(void)
+{
+  __asm volatile ("cpsie i" : : : "memory");
+}
+
+__attribute__((always_inline)) static inline void __disable_irq(void)
+{
+  __asm volatile ("cpsid i" : : : "memory");
+}
