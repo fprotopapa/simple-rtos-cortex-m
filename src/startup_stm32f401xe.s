@@ -24,10 +24,10 @@
   ******************************************************************************
   */
     
-  .syntax unified
-  .cpu cortex-m4
-  .fpu softvfp
-  .thumb
+.syntax unified
+.cpu cortex-m4
+.fpu softvfp
+.thumb
 
 .global  g_pfnVectors
 .global  Default_Handler
@@ -54,7 +54,7 @@ defined in linker script */
  * @retval : None
 */
 
-    .section  .text.Reset_Handler
+  .section  .text.Reset_Handler
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler:  
@@ -92,9 +92,9 @@ LoopFillZerobss:
   bcc FillZerobss
 
 /* Call the clock system initialization function.*/
-  bl  SystemInit   
+  //bl  SystemInit   
 /* Call static constructors */
-    bl __libc_init_array
+    //bl __libc_init_array
 /* Call the application's entry point.*/
   bl  main
   bx  lr    
@@ -107,7 +107,7 @@ LoopFillZerobss:
  * @param  None     
  * @retval None       
 */
-    .section  .text.Default_Handler,"ax",%progbits
+  .section  .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b  Infinite_Loop
@@ -119,7 +119,7 @@ Infinite_Loop:
 * 0x0000.0000.
 * 
 *******************************************************************************/
-   .section  .isr_vector,"a",%progbits
+  .section  .isr_vector,"a",%progbits
   .type  g_pfnVectors, %object
   .size  g_pfnVectors, .-g_pfnVectors
     
