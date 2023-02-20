@@ -18,3 +18,7 @@ void led_on() {
 void led_off() {
 	GPIOA_OUTPUT &= ~GPIOA_OUTPUT_5;
 }
+
+void led_toggle() {
+	GPIOA_OUTPUT ^= GPIOA_OUTPUT_5;
+}

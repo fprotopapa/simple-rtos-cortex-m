@@ -1,14 +1,26 @@
-//#include "stm32f4xx.h"
 #include "led.h"
 #include "uart.h"
-#include <stdio.h>
+#include <stdint.h>
+
+#define DELAY 1000000
+
+void delay (uint32_t time)
+{
+	while (time--);
+}
+
 
 int main (void) {
     led_init();
-    led_on();
     uart_init();
+    char buff[] = "Hello World.\n\r";
     while (1) {
-        printf("Hello World.\n\r");
+        delay (DELAY);
+        led_on();
+        uart_print(buff, sizeof(buff));
+        delay (DELAY);
+        led_off();
     }
     return 0;
 }
+
