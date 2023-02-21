@@ -15,7 +15,7 @@ INC_DIR = -Iinclude
 INC_DIR += -Iinclude/core
 
 CC = $(TOOLCHAIN)gcc
-DB = $(TOOLCHAIN)gdb
+DB = gdb-multiarch
 AS = $(TOOLCHAIN)gcc 
 OC = $(TOOLCHAIN)objcopy
 SZ = $(TOOLCHAIN)size
@@ -88,9 +88,12 @@ $(BUILD_DIR):
 clean: 
 	rm -rf build
 
+openocd:
+	@openocd -f /usr/local/share/openocd/scripts/interface/stlink.cfg -f /usr/local/share/openocd/scripts/board/st_nucleo_f4.cfg
+
 debug:
-	st-util
+	@$(DB) -ex "target extended-remote :3333" $(BUILD_DIR)/$(TARGET).elf
 
 flash:
-	st-flash write $(BUILD_DIR)/$(TARGET).bin 0x8000000
+	@st-flash --reset write $(BUILD_DIR)/$(TARGET).bin 0x8000000
 
