@@ -4,6 +4,7 @@ ST_UC ?= STM32F401xE
 M_ARCH ?= cortex-m4
 M_FPU ?= fpv4-sp-d16
 M_FLOAT ?= soft
+OOCD_BOARD ?= st_nucleo_f4
 
 
 TOOLCHAIN ?= arm-none-eabi-
@@ -38,7 +39,7 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
 AS_INCLUDES =
 AS_DEFS = 
-LIBS = -lc -lm -lnosys 
+#LIBS = -lc -lm -lnosys 
 
 DEBUG_FLAGS = -g -O0 -Wextra -Warray-bounds 
 CFLAGS = $(MCU)
@@ -65,7 +66,7 @@ $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: %.s | $(BUILD_DIR) 
 	@echo '[AS] -c $< -o $@'
-	@$(AS) -c $(ASFLAGS) $< -o $@ 
+	$(AS) -c $(ASFLAGS) $< -o $@ 
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJ)
 	@echo '[LD] $(OBJ) -o $@'
@@ -89,11 +90,12 @@ clean:
 	rm -rf build
 
 openocd:
-	@openocd -f /usr/local/share/openocd/scripts/interface/stlink.cfg -f /usr/local/share/openocd/scripts/board/st_nucleo_f4.cfg
+	@openocd -f interface/stlink.cfg -f board/$(OOCD_BOARD).cfg
 
 debug:
 	@$(DB) -ex "target extended-remote :3333" $(BUILD_DIR)/$(TARGET).elf
 
 flash:
-	@st-flash --reset write $(BUILD_DIR)/$(TARGET).bin 0x8000000
+	@openocd -f interface/stlink.cfg -f board/$(OOCD_BOARD).cfg -c init -c "reset halt" -c "flash write_image erase $(BUILD_DIR)/$(TARGET).bin 0x08000000" -c "reset" -c shutdown
+# @st-flash --reset write $(BUILD_DIR)/$(TARGET).bin 0x8000000
 
