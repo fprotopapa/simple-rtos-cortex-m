@@ -2,16 +2,23 @@
 #include "common.h"
 #include "uart.h"
 
-#define TIMER_LOAD_VAL (TIMEOUT_1_SEC - 1)
-
-uint32_t timer_get();
+static uint32_t timer_get();
 static void timer_inc();
+static void timer_init(uint32_t timeout);
 
-volatile uint32_t CURRENT_TICK=0;
+volatile uint32_t CURRENT_TICK = 0;
 
-void timer_init() {
-    SYST_RVR = TIMER_LOAD_VAL;
+void timer_sysclk(uint32_t quanta, uint32_t prescaler) {
+    if (quanta == 0) {
+        quanta = 1;
+    }
+    timer_init(quanta * prescaler);
+}
+
+static void timer_init(uint32_t timeout) {
+    SYST_RVR = (timeout - 1);
     SYST_CVR = 0;
+    NVIC_SetPriority(SysTick_IRQn, 15);
     SYST_CSR = SYST_CSR_CLKSRC;
     SYST_CSR |= SYST_CSR_TICKINT;
     SYST_CSR |= SYST_CSR_EN;
@@ -27,7 +34,7 @@ static void timer_inc() {
     CURRENT_TICK++;
 }
 
-uint32_t timer_get() {
+static uint32_t timer_get() {
     uint32_t current;
     __disable_irq();
    current = CURRENT_TICK;

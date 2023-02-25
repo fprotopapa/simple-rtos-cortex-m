@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void timer_init();
+void timer_sysclk(uint32_t quanta, uint32_t prescaler);
 void timer_delay_sec(uint32_t delay);
 
 #endif // __TIMER_H__

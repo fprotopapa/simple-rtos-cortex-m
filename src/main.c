@@ -1,6 +1,7 @@
 #include "led.h"
 #include "uart.h"
 #include "timer.h"
+#include "common.h"
 #include <stdint.h>
 
 void task1();
@@ -11,7 +12,8 @@ int task2_main();
 int main (void) {
     led_init();
     uart_init();
-    timer_init();
+    timer_sysclk(QUANTA, TIMEOUT_1MSEC);
+    led_on();
     volatile uint32_t cnt = 1;
     while (1) {
         if(cnt) {
